@@ -9,6 +9,9 @@ from urllib.parse import unquote
 from starlette.applications import Starlette
 from starlette.responses import JSONResponse, RedirectResponse
 from starlette.routing import Route
+from starlette.middleware import Middleware
+from starlette.middleware.cors import CORSMiddleware
+
 from models import Meal, TagMeal, Tag, get_session, get_all
 from sqlmodel import func, or_, select, text
 
@@ -85,8 +88,21 @@ async def meals(request):
     return JSONResponse([dict(result) for result in results])
 
 
-app = Starlette(debug=True, routes=[
-    Route('/', homepage),
-    Route('/meal/', meals),
-    Route('/tag/', tags),
-])
+async def tags(request):
+
+    return JSONResponse([dict(result) for result in get_all(Tag)])
+
+
+middlewares = [
+    Middleware(CORSMiddleware, allow_origins=['*'])
+]
+
+app = Starlette(
+    debug=True,
+    routes=[
+      Route('/', homepage),
+      Route('/meal/', meals),
+      Route('/tag/', tags),
+    ],
+    middleware=middlewares
+  )
