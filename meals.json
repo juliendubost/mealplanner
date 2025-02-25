@@ -1,0 +1,86 @@
+[
+  {
+    "name": "chili sin carne",
+    "tags": ["végé", "midi", "soir", "emportable"]
+  },
+  {
+    "name": "Poulet / légumes / riz",
+    "tags": ["midi", "soir", "emportable"]
+  },
+  {
+    "name": "Salade nicoise",
+    "tags": ["végé", "midi", "soir", "emportable"]
+  },
+  {
+    "name": "Pates pesto",
+    "tags": ["végé", "midi", "soir", "emportable"]
+  },
+  {
+    "name": "Couscous végé sin carne",
+    "tags": ["végé", "midi", "soir", "emportable"]
+  },
+  {
+    "name": "Salade chevre chaud",
+    "tags": ["végé", "soir"]
+  },
+  {
+    "name": "Omelette",
+    "tags": ["végé", "midi", "soir"]
+  },
+  {
+    "name": "Pates fraiches",
+    "tags": ["végé", "midi", "soir", "emportable"]
+  },
+  {
+    "name": "Faux filet",
+    "tags": ["midi", "soir"]
+  },
+  {
+    "name": "Gratin Champignon Brie",
+    "tags": ["végé", "midi", "soir", "emportable"]
+  },
+  {
+    "name": "Cordon bleue légumes",
+    "tags": ["midi", "soir", "emportable"]
+  },
+  {
+    "name": "Quenelles riz",
+    "tags": ["végé","midi", "soir"]
+  },
+  {
+    "name": "Falafels",
+    "tags": ["végé", "midi", "soir"]
+  },
+  {
+    "name": "Paillasson légumes",
+    "tags": ["végé", "midi", "soir"]
+  },
+  {
+    "name": "Souflet au fromage",
+    "tags": ["végé", "midi", "soir"]
+  },
+  {
+    "name": "Tartiflette",
+    "tags": ["midi", "soir", "emportable"]
+  },
+  {
+    "name": "Saumon court bouillon / riz",
+    "tags": ["végé", "midi", "soir", "emportable"]
+  },
+  {
+    "name": "Ratatouille, riz et oeuf",
+    "tags": ["végé", "midi", "soir", "emportable"]
+  },
+  {
+    "name": "Gnocchi aux herbes",
+    "tags": ["végé", "midi", "soir", "emportable"]
+  },
+  {
+    "name": "Dahl aux lentilles",
+    "tags": ["végé", "midi", "soir", "emportable"]
+  },
+  {
+    "name": "Ravioli aux legumes",
+    "tags": ["végé", "midi", "soir", "emportable"]
+  }
+]

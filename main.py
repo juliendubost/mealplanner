@@ -69,12 +69,13 @@ async def meals(request):
     count = handled_params.get("count")
 
     if tags:
-        tag_args = [
-            text(f"TagMeal.tag=='{value}'") for value in tags
-        ]
-        statement = select(TagMeal).where(
-            or_(*tag_args)).group_by(TagMeal.meal).having(
-            func.count(TagMeal.meal) >= len(tag_args))
+        tag_args = [text(f"TagMeal.tag=='{value}'") for value in tags]
+        statement = (
+            select(TagMeal)
+            .where(or_(*tag_args))
+            .group_by(TagMeal.meal)
+            .having(func.count(TagMeal.meal) >= len(tag_args))
+        )
 
     else:
         statement = select(TagMeal).group_by(TagMeal.meal)
@@ -83,7 +84,7 @@ async def meals(request):
     random.shuffle(results)
 
     if count:
-        results = results[:int(count[0])]
+        results = results[: int(count[0])]
 
     return JSONResponse([dict(result) for result in results])
 
@@ -93,16 +94,14 @@ async def tags(request):
     return JSONResponse([dict(result) for result in get_all(Tag)])
 
 
-middlewares = [
-    Middleware(CORSMiddleware, allow_origins=['*'])
-]
+middlewares = [Middleware(CORSMiddleware, allow_origins=["*"])]
 
 app = Starlette(
     debug=True,
     routes=[
-      Route('/', homepage),
-      Route('/meal/', meals),
-      Route('/tag/', tags),
+        Route("/", homepage),
+        Route("/meal/", meals),
+        Route("/tag/", tags),
     ],
-    middleware=middlewares
-  )
+    middleware=middlewares,
+)

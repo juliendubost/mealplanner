@@ -1,4 +1,5 @@
 from typing import Optional
+import json
 
 from sqlmodel import Field, Session, SQLModel, create_engine, ForeignKey, select
 
@@ -12,6 +13,8 @@ class TagMeal(SQLModel, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)
     tag: str = ForeignKey("tag.name")
     meal: str = ForeignKey("meal.name")
+
+
 ####################
 
 
@@ -47,3 +50,39 @@ def get_all(model):
     session = get_session()
     statement = select(model)
     return session.exec(statement).all()
+
+
+def load_meals(json_file_path):
+    js_data = json.load(open(json_file_path))
+    sn = get_session()
+
+    for meal_data in js_data:
+        tags_inst = []
+        for tag in meal_data["tags"]:
+            tag_inst = sn.get(Tag, tag)
+            if not tag_inst:
+                sn.add(Tag(name=tag))
+                tag_inst = sn.get(Tag, tag)
+            tags_inst.append(tag_inst)
+
+        meal_inst = sn.get(Meal, meal_data["name"])
+        if not meal_inst:
+            sn.add(
+                Meal(
+                    name=meal_data["name"],
+                    description=meal_data.get("description", ""),
+                    url=meal_data.get("url", ""),
+                )
+            )
+            meal_inst = sn.get(Meal, meal_data["name"])
+
+        for tag_inst in tags_inst:
+            meal_tag_inst = sn.execute(
+                select(TagMeal).where(
+                    TagMeal.tag == tag_inst.name, TagMeal.meal == meal_inst.name
+                )
+            ).first()
+            if not meal_tag_inst:
+                sn.add(TagMeal(tag=tag_inst.name, meal=meal_inst.name))
+
+    sn.commit()
