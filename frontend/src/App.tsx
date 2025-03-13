@@ -1,41 +1,59 @@
 import React, { useState } from 'react';
-import logo from './logo.svg';
-import './App.css';
-import 'mini.css';
-import { Trash, Repeat } from 'react-bootstrap-icons';
-import axios, {isCancel, AxiosError} from 'axios';
-import { BrowserRouter, Router, Routes, Route, useSearchParams } from "react-router-dom";
+import { BrowserRouter, Routes, Route, useSearchParams } from "react-router-dom";
+import axios from 'axios';
+import {
+  Card,
+  CardContent,
+  Typography,
+  Grid,
+  IconButton,
+  ThemeProvider,
+  createTheme,
+  CssBaseline,
+  Container,
+  Box,
+  Paper,
+} from '@mui/material';
+import { Delete as DeleteIcon, Refresh as RefreshIcon } from '@mui/icons-material';
 
+// Create a theme instance
+const theme = createTheme({
+  palette: {
+    primary: {
+      main: '#1976d2',
+    },
+    secondary: {
+      main: '#dc004e',
+    },
+    background: {
+      default: '#f5f5f5',
+    },
+  },
+});
 
 export interface MealCardData {
   name: string;
-  id: number;  // backend ID
-  day: number;  // day of week, 0: monday, 6: Sunday
-  time: number; // 0: lunch, 1: dinner
-};
-
+  id: number;
+  day: number;
+  time: number;
+}
 
 const MealCard: React.FC<MealCardData> = ({name, id, day, time}) => {
-
-
     const [inputData, setInputData] = useState<MealCardData>({ name, id, day, time });
-
     const [searchParams, setSearchParams] = useSearchParams();
     let searchKey = String(day) + String(time);
-
 
     const emptyMealCard = () => {
       setInputData(prevData => ({...prevData, name: ''}));
       setSearchParams(prevData => {
-                    prevData.set(searchKey, '');
-                    return prevData;
-                });
+        prevData.set(searchKey, '');
+        return prevData;
+      });
     };
 
     const renewMealCard = () => {
         let tag = time ? "soir": "midi";
-
-        axios.get('http://localhost:8000/meal', {
+        axios.get('http://be.mp.jujuu.xyz/meal', {
             params: {
               count: 1,
               tag: tag,
@@ -52,29 +70,28 @@ const MealCard: React.FC<MealCardData> = ({name, id, day, time}) => {
     };
 
    return (
-   <>
-        <div className="card">
-         <div className="row">
-          <div className="col-sm-8 col-md-8 col-lg-8">
-            <h3>{inputData.name}</h3>
-          </div>
-          <div className="col-sm-2 col-md-2 col-lg-2">
-            <button className="button refresh" onClick={ renewMealCard }><Repeat /></button>
-          </div>
-          <div className="col-sm-2 col-md-2 col-lg-2">
-            <button className="button delete" onClick={ emptyMealCard }><Trash /></button>
-          </div>
-       </div>
-      </div>
-   </>
+     <Card sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
+       <CardContent sx={{ flexGrow: 1 }}>
+         <Box display="flex" justifyContent="space-between" alignItems="center">
+           <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+             {inputData.name || 'Ajouter un repas'}
+           </Typography>
+           <Box>
+             <IconButton onClick={renewMealCard} color="primary" size="small">
+               <RefreshIcon />
+             </IconButton>
+             <IconButton onClick={emptyMealCard} color="error" size="small">
+               <DeleteIcon />
+             </IconButton>
+           </Box>
+         </Box>
+       </CardContent>
+     </Card>
    );
 };
 
-
 const MealTable: React.FC = () => {
-
   const [searchParams] = useSearchParams();
-  console.log("MealTable" + searchParams);
 
   const mealCards: MealCardData[] = [
     {name:searchParams.get("00") ?? '', id:0, day:0, time: 0},
@@ -93,108 +110,55 @@ const MealTable: React.FC = () => {
     {name:searchParams.get("61") ?? '', id:0, day:6, time: 1},
   ];
 
+  const days = ['Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi', 'Dimanche'];
+
   return (
-  <>
-    <div className="row">
-      <div className="col-sm-4 col-md-4 col-md-4">
-      </div>
-      <div className="col-sm-4 col-md-4 col-md-4">
-        <h1>Midi</h1>
-      </div>
-      <div className="col-sm-4 col-md-4 col-md-4">
-        <h1>Soir</h1>
-      </div>
-    </div>
-    <div className="row">
-      <div className="col-sm-4 col-md-4 col-md-4">
-        <h1>Lundi</h1>
-      </div>
-      <div className="col-sm-4 col-md-4 col-md-4">
-        <MealCard {...mealCards[0]} />
-      </div>
-      <div className="col-sm-4 col-md-4 col-md-4">
-        <MealCard {...mealCards[1]} />
-      </div>
-    </div>
-    <div className="row">
-      <div className="col-sm-4 col-md-4 col-md-4">
-        <h1>Mardi</h1>
-      </div>
-      <div className="col-sm-4 col-md-4 col-md-4">
-        <MealCard {...mealCards[2]} />
-      </div>
-      <div className="col-sm-4 col-md-4 col-md-4">
-        <MealCard {...mealCards[3]} />
-      </div>
-    </div>
-    <div className="row">
-      <div className="col-sm-4 col-md-4 col-md-4">
-        <h1>Mercredi</h1>
-      </div>
-      <div className="col-sm-4 col-md-4 col-md-4">
-        <MealCard {...mealCards[4]} />
-      </div>
-      <div className="col-sm-4 col-md-4 col-md-4">
-        <MealCard {...mealCards[5]} />
-      </div>
-    </div>
-    <div className="row">
-      <div className="col-sm-4 col-md-4 col-md-4">
-        <h1>Jeudi</h1>
-      </div>
-      <div className="col-sm-4 col-md-4 col-md-4">
-        <MealCard {...mealCards[6]} />
-      </div>
-      <div className="col-sm-4 col-md-4 col-md-4">
-        <MealCard {...mealCards[7]} />
-      </div>
-    </div>
-    <div className="row">
-      <div className="col-sm-4 col-md-4 col-md-4">
-        <h1>Vendredi</h1>
-      </div>
-      <div className="col-sm-4 col-md-4 col-md-4">
-        <MealCard {...mealCards[8]} />
-      </div>
-      <div className="col-sm-4 col-md-4 col-md-4">
-        <MealCard {...mealCards[9]} />
-      </div>
-    </div>
-    <div className="row">
-      <div className="col-sm-4 col-md-4 col-md-4">
-        <h1>Samedi</h1>
-      </div>
-      <div className="col-sm-4 col-md-4 col-md-4">
-        <MealCard {...mealCards[10]} />
-      </div>
-      <div className="col-sm-4 col-md-4 col-md-4">
-        <MealCard {...mealCards[11]} />
-      </div>
-    </div>
-    <div className="row">
-      <div className="col-sm-4 col-md-4 col-md-4">
-        <h1>Dimanche</h1>
-      </div>
-      <div className="col-sm-4 col-md-4 col-md-4">
-        <MealCard {...mealCards[12]} />
-      </div>
-      <div className="col-sm-4 col-md-4 col-md-4">
-        <MealCard {...mealCards[13]} />
-      </div>
-    </div>
-  </>
+    <Container maxWidth="lg" sx={{ py: 4 }}>
+      <Paper elevation={3} sx={{ p: 3, mb: 4 }}>
+        <Grid container spacing={3}>
+          {/* Header row */}
+          <Grid item xs={3}>
+            <Typography variant="h6" sx={{ fontWeight: 'bold' }}></Typography>
+          </Grid>
+          <Grid item xs={4.5}>
+            <Typography variant="h6" sx={{ fontWeight: 'bold' }}>Midi</Typography>
+          </Grid>
+          <Grid item xs={4.5}>
+            <Typography variant="h6" sx={{ fontWeight: 'bold' }}>Soir</Typography>
+          </Grid>
+
+          {/* Day rows */}
+          {days.map((day, index) => (
+            <React.Fragment key={day}>
+              <Grid item xs={3}>
+                <Typography variant="h6" sx={{ fontWeight: 'bold' }}>{day}</Typography>
+              </Grid>
+              <Grid item xs={4.5}>
+                <MealCard {...mealCards[index * 2]} />
+              </Grid>
+              <Grid item xs={4.5}>
+                <MealCard {...mealCards[index * 2 + 1]} />
+              </Grid>
+            </React.Fragment>
+          ))}
+        </Grid>
+      </Paper>
+    </Container>
   );
 };
 
-
 const App = () => {
-
   return (
-    <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<MealTable />} />
-      </Routes>
-    </BrowserRouter>
+    <ThemeProvider theme={theme}>
+      <CssBaseline />
+      <Box sx={{ bgcolor: 'background.default', minHeight: '100vh', py: 3 }}>
+        <BrowserRouter>
+          <Routes>
+            <Route path="/" element={<MealTable />} />
+          </Routes>
+        </BrowserRouter>
+      </Box>
+    </ThemeProvider>
   );
 }
 

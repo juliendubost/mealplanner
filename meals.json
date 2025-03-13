@@ -1,6 +1,6 @@
 [
   {
-    "name": "chili sin carne",
+    "name": "Chili sin carne",
     "tags": ["végé", "midi", "soir", "emportable"]
   },
   {
@@ -49,7 +49,19 @@
   },
   {
     "name": "Falafels",
-    "tags": ["végé", "midi", "soir"]
+    "tags": ["végé", "midi", "soir", "emportable"]
+  },
+  {
+    "name": "PokeBawl végé",
+    "tags": ["végé", "midi", "soir", "emportable"]
+  },
+  {
+    "name": "Boulettes de lentilles",
+    "tags": ["végé", "midi", "soir", "emportable"]
+  },
+  {
+    "name": "Cotelettes d'agneau",
+    "tags": ["midi", "soir", "emportable"]
   },
   {
     "name": "Paillasson légumes",
